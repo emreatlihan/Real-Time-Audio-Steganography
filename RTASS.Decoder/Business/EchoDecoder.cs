@@ -1,6 +1,6 @@
 using RTASS.Common.Steganography.Interfaces;
 
-namespace RTASS.Common.Steganography.EchoHiding
+namespace RTASS.Decoder.Business
 {
     /// <summary>
     /// Echo Hiding yöntemi ile gizli veriyi çıkarma (decoding)

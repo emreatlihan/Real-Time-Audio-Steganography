@@ -1,6 +1,6 @@
 using RTASS.Common.Steganography.Interfaces;
 
-namespace RTASS.Common.Steganography.EchoHiding
+namespace RTASS.Encoder.Business
 {
     /// <summary>
     /// Echo Hiding yöntemi ile veri gizleme (encoding)
