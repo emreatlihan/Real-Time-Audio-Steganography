@@ -1,3 +1,5 @@
+using RTASS.Common.Steganography.EchoHiding;
+
 namespace RTASS.Common.Steganography.Interfaces
 {
     /// <summary>
@@ -5,6 +7,6 @@ namespace RTASS.Common.Steganography.Interfaces
     /// </summary>
     public interface ISteganographyDecoder
     {
-        byte[] Decode(byte[] stegoAudioData);
+        bool[] Decode(float[] stegoAudioData, EchoParameters parameters);
     }
 }
