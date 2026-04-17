@@ -1,3 +1,4 @@
+using RTASS.Common.Steganography.EchoHiding;
 using RTASS.Common.Steganography.Interfaces;
 
 namespace RTASS.Decoder.Business
@@ -7,9 +8,10 @@ namespace RTASS.Decoder.Business
     /// </summary>
     public class EchoDecoder : ISteganographyDecoder
     {
-        public byte[] Decode(byte[] stegoAudioData)
+        public bool[] Decode(float[] stegoAudioData, EchoParameters parameters)
         {
             throw new NotImplementedException();
         }
     }
 }
+
