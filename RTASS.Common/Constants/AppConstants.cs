@@ -13,5 +13,6 @@ namespace RTASS.Common.Constants
         public const double DefaultDecayRate = 0.5;
         public const double DefaultMixingRate = 0.7;
         public const int DefaultSegmentLength = 8192;
+        public const float Epsilon = 1e-10f;
     }
 }
