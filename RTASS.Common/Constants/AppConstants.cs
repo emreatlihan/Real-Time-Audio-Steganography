@@ -14,5 +14,10 @@ namespace RTASS.Common.Constants
         public const double DefaultMixingRate = 0.7;
         public const int DefaultSegmentLength = 8192;
         public const float Epsilon = 1e-10f;
+
+        // P2 - Mesaj Protokolü Sabitleri (Senkronizasyon ve Uzunluk)
+        public static readonly bool[] SyncPattern = { true, false, true, false, true, false, true, false, 
+                                                      false, true, false, true, false, true, false, true }; // 10101010 01010101
+        public const int MessageLengthHeaderBits = 32;
     }
 }
