@@ -40,6 +40,29 @@ namespace RTASS.Common.Helpers
             }
             return System.Text.Encoding.UTF8.GetString(bytes);
         }
+
+        public static bool[] IntToBits(int value)
+        {
+            bool[] bits = new bool[32];
+            for (int i = 0; i < 32; i++)
+            {
+                bits[i] = ((value >> (31 - i)) & 1) != 0;
+            }
+            return bits;
+        }
+
+        public static int BitsToInt(bool[] bits)
+        {
+            int value = 0;
+            for (int i = 0; i < 32 && i < bits.Length; i++)
+            {
+                if (bits[i])
+                {
+                    value |= (1 << (31 - i));
+                }
+            }
+            return value;
+        }
     }
 }
 
