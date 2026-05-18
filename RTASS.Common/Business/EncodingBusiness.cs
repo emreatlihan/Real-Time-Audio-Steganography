@@ -51,20 +51,18 @@ namespace RTASS.Common.Business
                 // Eğer gömülecek veri yoksa ses verisine dokunmadan çık
                 if (_bitBuffer.Count == 0) return;
 
-                // Mevcut buffer'daki bitleri encoder'a gönderiyoruz.
-                // Encoder, ses chunk'ının boyutuna (ve block size değerine) göre 
-                // bu chunk'a kaç bit sığdırabileceğini hesaplar ve gömer.
-                bool[] bitsToEncode = _bitBuffer.ToArray();
+                // 1. Bu ses parçasına (chunk) EN FAZLA kaç bit sığabileceğini hesapla
+                int maxBitsCapacity = audioData.Length / parameters.SegmentLength;
+                
+                if (maxBitsCapacity == 0) return;
 
-                // Encoder'ın bu chunk içerisine başarıyla gömebildiği bit sayısını geri alıyoruz.
+                int bitsToTake = Math.Min(maxBitsCapacity, _bitBuffer.Count);
+                bool[] bitsToEncode = _bitBuffer.Take(bitsToTake).ToArray();
+
                 float[] encodedAudio = _encoder.Encode(audioData, bitsToEncode, parameters);
-                int bitsEncoded = bitsToEncode.Length; 
 
-                if (bitsEncoded > 0)
-                {
-                    // Başarıyla gömülen bitleri kuyruktan temizle, geri kalanı bir sonraki chunk'a kalsın
-                    _bitBuffer.RemoveRange(0, Math.Min(bitsEncoded, _bitBuffer.Count));
-                }
+                Array.Copy(encodedAudio, audioData, audioData.Length);
+                _bitBuffer.RemoveRange(0, bitsToTake);
             }
         }
         /// Gönderimi iptal etmek veya buffer'ı temizlemek gerekirse kullanılır.
