@@ -10,7 +10,8 @@ namespace RTASS.Common.Constants
         public const int DefaultChannels = 1;
         public const double DefaultDelayOne = 0.01;
         public const double DefaultDelayZero = 0.005;
-        public const double DefaultDecayRate = 0.5;
+        // Sesin bozulmasını (metalik yankı ve cızırtı) önlemek için %50'den %10'a düşürüldü
+        public const double DefaultDecayRate = 0.1; 
         public const double DefaultMixingRate = 0.7;
         public const int DefaultSegmentLength = 8192;
         public const float Epsilon = 1e-10f;
