@@ -89,16 +89,54 @@ namespace RTASS.Decoder.Business
         }
 
         /// <summary>
-        /// Cepstrum dizisindeki tepecik değerlerini karşılaştırarak gömülen biti tespit eder.
-        /// delayOne indeksindeki tepecik daha büyükse → bit 1 (true)
-        /// delayZero indeksindeki tepecik daha büyükse → bit 0 (false)
+        /// Cepstrum dizisindeki tepecik değerlerinin yerel belirginliğini (prominence) karşılaştırarak gömülen biti tespit eder.
+        /// delayOne indeksindeki belirginlik daha büyükse → bit 1 (true)
+        /// delayZero indeksindeki belirginlik daha büyükse → bit 0 (false)
         /// </summary>
         private bool DetectBit(float[] cepstrum, int delayOneSamples, int delayZeroSamples)
         {
-            float peakOne = MathF.Abs(cepstrum[delayOneSamples]);
-            float peakZero = MathF.Abs(cepstrum[delayZeroSamples]);
+            float prominenceOne = GetPeakProminence(cepstrum, delayOneSamples);
+            float prominenceZero = GetPeakProminence(cepstrum, delayZeroSamples);
 
-            return peakOne > peakZero;
+            return prominenceOne > prominenceZero;
+        }
+
+        /// <summary>
+        /// Belirli bir gecikme indeksindeki tepeciğin yerel komşuluğuna göre ne kadar belirgin (prominent) olduğunu hesaplar.
+        /// Bu, sesin kendi frekans karakteristiğinden kaynaklanan doğal cepstrum düşüşünü (decay) dengeler.
+        /// </summary>
+        private float GetPeakProminence(float[] cepstrum, int delayIndex)
+        {
+            int neighborhoodHalfWidth = 10; // Yerel baseline pencere genişliği (yarı çap)
+            int excludeHalfWidth = 2;       // Tepeciğin kendisinin baseline'ı kirletmesini önlemek için hariç tutulan alan
+            
+            float sum = 0f;
+            int count = 0;
+
+            for (int i = -neighborhoodHalfWidth; i <= neighborhoodHalfWidth; i++)
+            {
+                if (i >= -excludeHalfWidth && i <= excludeHalfWidth)
+                {
+                    continue; // Tepeciğin kendisini ve hemen bitişiğindeki yayılımı baseline hesaplamasına katma
+                }
+
+                int idx = delayIndex + i;
+                if (idx >= 0 && idx < cepstrum.Length)
+                {
+                    sum += MathF.Abs(cepstrum[idx]);
+                    count++;
+                }
+            }
+
+            if (count == 0) 
+            {
+                return MathF.Abs(cepstrum[delayIndex]);
+            }
+
+            float baseline = sum / count;
+            
+            // Tepecik değerinin yerel ortalamaya oranı (SNR benzeri metrik)
+            return MathF.Abs(cepstrum[delayIndex]) / (baseline + 1e-9f);
         }
     }
 }

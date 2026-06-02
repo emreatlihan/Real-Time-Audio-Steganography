@@ -81,9 +81,11 @@ namespace RTASS.Encoder
             int sampleRate = AppConstants.DefaultSampleRate;
             int totalSamples = sampleRate * 30; // 30 saniyelik ses (Mesaj kapasitesi için en az 20sn lazım)
             float[] audio = new float[totalSamples];
+            Random rnd = new Random();
             for (int n = 0; n < totalSamples; n++)
             {
-                audio[n] = (float)Math.Sin(2 * Math.PI * 440 * n / sampleRate) * 0.5f;
+                // Sinüs dalgası yerine Beyaz Gürültü (White Noise) kullanıyoruz
+                audio[n] = (float)(rnd.NextDouble() * 2.0 - 1.0) * 0.2f;
             }
             var writer = new AudioWriter();
             writer.WriteWavFile(path, audio, sampleRate, 1);
