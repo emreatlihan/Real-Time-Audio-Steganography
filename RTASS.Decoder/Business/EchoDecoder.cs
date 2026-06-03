@@ -5,11 +5,6 @@ using RTASS.Common.Steganography.Interfaces;
 
 namespace RTASS.Decoder.Business
 {
-    /// <summary>
-    /// Echo Hiding yöntemi ile gizli veriyi çıkarma (decoding).
-    /// Cepstrum analizi kullanarak her segmentteki yankı gecikmesini tespit eder
-    /// ve gecikme süresine göre bit 0 veya bit 1 kararı verir.
-    /// </summary>
     public class EchoDecoder : ISteganographyDecoder
     {
         public bool[] Decode(float[] stegoAudioData, EchoParameters parameters)
@@ -60,7 +55,7 @@ namespace RTASS.Decoder.Business
         {
             int length = segment.Length;
 
-            // Adım 1: Pencereleme — spectral leakage'ı önle
+            // Adım 1: Pencreleme — spectral leakage'ı önle
             WindowHelper.ApplyHannWindow(segment);
 
             // Adım 2: FFT — zaman → frekans dönüşümü
@@ -88,11 +83,6 @@ namespace RTASS.Decoder.Business
             return cepstrumReal;
         }
 
-        /// <summary>
-        /// Cepstrum dizisindeki tepecik değerlerinin yerel belirginliğini (prominence) karşılaştırarak gömülen biti tespit eder.
-        /// delayOne indeksindeki belirginlik daha büyükse → bit 1 (true)
-        /// delayZero indeksindeki belirginlik daha büyükse → bit 0 (false)
-        /// </summary>
         private bool DetectBit(float[] cepstrum, int delayOneSamples, int delayZeroSamples)
         {
             float prominenceOne = GetPeakProminence(cepstrum, delayOneSamples);
@@ -101,10 +91,7 @@ namespace RTASS.Decoder.Business
             return prominenceOne > prominenceZero;
         }
 
-        /// <summary>
-        /// Belirli bir gecikme indeksindeki tepeciğin yerel komşuluğuna göre ne kadar belirgin (prominent) olduğunu hesaplar.
-        /// Bu, sesin kendi frekans karakteristiğinden kaynaklanan doğal cepstrum düşüşünü (decay) dengeler.
-        /// </summary>
+
         private float GetPeakProminence(float[] cepstrum, int delayIndex)
         {
             int neighborhoodHalfWidth = 10; // Yerel baseline pencere genişliği (yarı çap)
